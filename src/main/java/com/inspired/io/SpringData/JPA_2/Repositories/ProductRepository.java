@@ -1,6 +1,7 @@
 package com.inspired.io.SpringData.JPA_2.Repositories;
 
 import com.inspired.io.SpringData.JPA_2.Model.Product;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
@@ -13,6 +14,6 @@ public interface ProductRepository extends PagingAndSortingRepository<Product, I
     List<Product> findByPriceGreaterThan(Double price);
     List<Product> findByDescContains(String word);
     List<Product> findByPriceBetween(Double price1, Double price2);
-    List<Product> findByDescLike(String desc);
+    List<Product> findByDescLike(String desc, Pageable pageable);
     List<Product> findByIdIn(List<Integer> ids);
 }

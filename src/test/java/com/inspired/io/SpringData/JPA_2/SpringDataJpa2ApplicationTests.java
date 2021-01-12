@@ -10,6 +10,7 @@ import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.Arrays;
 import java.util.List;
@@ -119,7 +120,8 @@ class SpringDataJpa2ApplicationTests {
 
 	@Test
 	public void testFindByDescLike(){
-		List<Product> productList = productRepository.findByDescLike("%best%");
+		Pageable pageable = PageRequest.of(0,3);
+		List<Product> productList = productRepository.findByDescLike("%best%", pageable);
 		productList.forEach(product -> System.out.println(product.getName()));
 	}
 
@@ -129,8 +131,19 @@ class SpringDataJpa2ApplicationTests {
 		productList.forEach(product -> System.out.println(product.getName()));
 	}
 
+	@Test
 	public void testFindAllPaging(){
+		Pageable pageable = PageRequest.of(0,3);
+		Iterable<Product> results = productRepository.findAll(pageable);
+		results.forEach( result -> System.out.println(result.getName()
+		));
+	}
 
+	@Test
+	public void testFindAllPagingAndSorting(){
+		Pageable pageable = PageRequest.of(0,3, Sort.by("name").descending().and(Sort.by("price").descending()));
+		Iterable<Product> results = productRepository.findAll(pageable);
+		results.forEach(result -> System.out.println(result.getName()+" -----> "+result.getPrice()));
 	}
 
 }
