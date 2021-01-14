@@ -19,8 +19,7 @@ public class Student {
     public Student() {
     }
 
-    public Student(Integer id, String firstname, String lastname, double score) {
-        this.id = id;
+    public Student(String firstname, String lastname, double score) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.score = score;

@@ -2,11 +2,12 @@ package com.inspired.io.SpringData.JPA_2;
 
 import com.inspired.io.SpringData.JPA_2.Model.Employee;
 import com.inspired.io.SpringData.JPA_2.Model.Product;
+import com.inspired.io.SpringData.JPA_2.Model.Student;
 import com.inspired.io.SpringData.JPA_2.Repositories.EmployeeRepository;
 import com.inspired.io.SpringData.JPA_2.Repositories.ProductRepository;
+import com.inspired.io.SpringData.JPA_2.Repositories.StudentRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,11 +24,13 @@ class SpringDataJpa2ApplicationTests {
 
 	ProductRepository productRepository;
 	EmployeeRepository employeeRepository;
+	StudentRepository studentRepository;
 
 	@Autowired
-   public SpringDataJpa2ApplicationTests(ProductRepository productRepository, EmployeeRepository employeeRepository){
+   public SpringDataJpa2ApplicationTests(ProductRepository productRepository, EmployeeRepository employeeRepository, StudentRepository studentRepository){
    	this.productRepository = productRepository;
    	this.employeeRepository = employeeRepository;
+   	this.studentRepository = studentRepository;
    }
 
 	@Test
@@ -135,8 +138,7 @@ class SpringDataJpa2ApplicationTests {
 	public void testFindAllPaging(){
 		Pageable pageable = PageRequest.of(0,3);
 		Iterable<Product> results = productRepository.findAll(pageable);
-		results.forEach( result -> System.out.println(result.getName()
-		));
+		results.forEach( result -> System.out.println(result.getName()));
 	}
 
 	@Test
@@ -145,6 +147,42 @@ class SpringDataJpa2ApplicationTests {
 		Iterable<Product> results = productRepository.findAll(pageable);
 		results.forEach(result -> System.out.println(result.getName()+" -----> "+result.getPrice()));
 	}
+
+	@Test
+	public void testStudentCreate(){
+		Student student = new Student();
+		student.setFirstname("Erastus");
+		student.setLastname("Doh");
+		student.setScore(89.0);
+		studentRepository.save(student);
+
+		Student student1 = new Student();
+		student1.setFirstname("Francis");
+		student1.setLastname("Deh");
+		student1.setScore(98.1);
+		studentRepository.save(student1);
+
+		Student student2 = new Student();
+		student2.setFirstname("Vicent");
+		student2.setLastname("Tetteh");
+		student2.setScore(90);
+		studentRepository.save(student2);
+
+		Student student3 = new Student();
+		student3.setFirstname("Juliet");
+		student3.setLastname("Ilupeju");
+		student3.setScore(87);
+		studentRepository.save(student3);
+
+	}
+
+	@Test
+	public void	testFindAllStudents(){
+		System.out.println(studentRepository.findAllStudents());;
+//		students.forEach(student-> System.out.println(student.getFirstname() + " " + student.getLastname()));
+	}
+
+
 
 }
 
