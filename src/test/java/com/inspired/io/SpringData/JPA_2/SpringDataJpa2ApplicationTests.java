@@ -4,6 +4,7 @@ import com.inspired.io.SpringData.JPA_2.Model.Employee;
 import com.inspired.io.SpringData.JPA_2.Model.Product;
 import com.inspired.io.SpringData.JPA_2.Model.Student;
 import com.inspired.io.SpringData.JPA_2.Repositories.EmployeeRepository;
+import com.inspired.io.SpringData.JPA_2.Repositories.PaymentRepository;
 import com.inspired.io.SpringData.JPA_2.Repositories.ProductRepository;
 import com.inspired.io.SpringData.JPA_2.Repositories.StudentRepository;
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -20,17 +22,19 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class SpringDataJpa2ApplicationTests {
+class  SpringDataJpa2ApplicationTests {
 
 	ProductRepository productRepository;
 	EmployeeRepository employeeRepository;
 	StudentRepository studentRepository;
+	PaymentRepository paymentRepository;
 
 	@Autowired
-   public SpringDataJpa2ApplicationTests(ProductRepository productRepository, EmployeeRepository employeeRepository, StudentRepository studentRepository){
+   public SpringDataJpa2ApplicationTests(ProductRepository productRepository, EmployeeRepository employeeRepository, StudentRepository studentRepository, PaymentRepository paymentRepository){
    	this.productRepository = productRepository;
    	this.employeeRepository = employeeRepository;
    	this.studentRepository = studentRepository;
+   	this.paymentRepository = paymentRepository;
    }
 
 	@Test
@@ -178,8 +182,56 @@ class SpringDataJpa2ApplicationTests {
 
 	@Test
 	public void	testFindAllStudents(){
-		System.out.println(studentRepository.findAllStudents());;
+		System.out.println(studentRepository.findAllStudents());
 //		students.forEach(student-> System.out.println(student.getFirstname() + " " + student.getLastname()));
+	}
+
+	@Test
+	public void testFindAllStudentsPartialData(){
+		List<Object[]> partialData =	studentRepository.findAllStudentsPartialData();
+		for (Object[] object: partialData) {
+			System.out.println(object[0]);
+			System.out.println(object[1]);
+		}
+	}
+
+	@Test
+	public void testFindAllStudentsByFirstName(){
+		List<Student> students = studentRepository.findAllStudentsByFirstName("erastus");
+		students.forEach(student -> System.out.println(student.getFirstname() + " " + student.getLastname()));
+	}
+
+
+	@Test
+	public void testFindAllStudentsWithAGivenScore(){
+		Pageable pageable = PageRequest.of(0,3,Sort.by("score").descending());
+		List<Student> students = studentRepository.findAllStudentsByGivenScore(80.0,95.0,pageable);
+		students.forEach(student -> System.out.println(student.getFirstname() + " " + student.getScore()));
+	}
+
+//	@Test
+//	@Transactional
+//	@Rollback(value = false)
+//	public void testDeleteStudentByFirstName(){
+//		studentRepository.deleteStudentByFirstName("Erastus");
+//	}
+
+	@Test
+	public void testFindAllStudentByNativeQuery(){
+		List<Student> studentList = studentRepository.findAllStudentsNativeQuery();
+		studentList.forEach(student -> System.out.println(student.getFirstname()  + " " + student.getLastname()));
+	}
+
+//	@Test
+//	public void testFindStudentByNativeQuery(){
+//		Student fnameStudent = studentRepository.findStudentByFirstnameNativeQuery("Erastus");
+//		System.out.println(fnameStudent.getFirstname() + " " + fnameStudent.getLastname());
+//	}
+
+
+	@Test
+	public void createPayment(){
+
 	}
 
 
