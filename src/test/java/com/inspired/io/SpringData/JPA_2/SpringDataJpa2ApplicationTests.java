@@ -1,12 +1,7 @@
 package com.inspired.io.SpringData.JPA_2;
 
-import com.inspired.io.SpringData.JPA_2.Model.Employee;
-import com.inspired.io.SpringData.JPA_2.Model.Product;
-import com.inspired.io.SpringData.JPA_2.Model.Student;
-import com.inspired.io.SpringData.JPA_2.Repositories.EmployeeRepository;
-import com.inspired.io.SpringData.JPA_2.Repositories.PaymentRepository;
-import com.inspired.io.SpringData.JPA_2.Repositories.ProductRepository;
-import com.inspired.io.SpringData.JPA_2.Repositories.StudentRepository;
+import com.inspired.io.SpringData.JPA_2.Model.*;
+import com.inspired.io.SpringData.JPA_2.Repositories.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,6 +11,7 @@ import org.springframework.data.domain.Sort;
 
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,13 +24,17 @@ class  SpringDataJpa2ApplicationTests {
 	EmployeeRepository employeeRepository;
 	StudentRepository studentRepository;
 	PaymentRepository paymentRepository;
+	EmployeeeRepository employeeeRepository;
+	CustomerrRepository customerrRepository;
 
 	@Autowired
-   public SpringDataJpa2ApplicationTests(ProductRepository productRepository, EmployeeRepository employeeRepository, StudentRepository studentRepository, PaymentRepository paymentRepository){
+   public SpringDataJpa2ApplicationTests(ProductRepository productRepository, EmployeeRepository employeeRepository, StudentRepository studentRepository, PaymentRepository paymentRepository, EmployeeeRepository employeeeRepository, CustomerrRepository	customerrRepository){
    	this.productRepository = productRepository;
    	this.employeeRepository = employeeRepository;
    	this.studentRepository = studentRepository;
    	this.paymentRepository = paymentRepository;
+   	this.employeeeRepository = employeeeRepository;
+   	this.customerrRepository = customerrRepository;
    }
 
 	@Test
@@ -234,6 +234,48 @@ class  SpringDataJpa2ApplicationTests {
 
 	}
 
+
+	@Test
+	public void testCreateEmployeee(){
+		Employeee employeee = new Employeee();
+		employeee.setId(1);
+		employeee.setName("Erastus Doh");
+		Address address = new Address();
+		address.setCity("Accra");
+		address.setStreetAddress("Batsonaa Spintex Road");
+		address.setCountry("Ghana");
+		address.setState("Greater Accra");
+		address.setZipcode("+233");
+		employeee.setAddress(address);
+		employeeeRepository.save(employeee);
+	}
+
+
+	@Test
+	public void testCreateCustomerr() {
+		Customerr customerr = new Customerr();
+		HashSet<PhoneNumber> ph1 = new HashSet<>();
+		PhoneNumber cellPhone = new PhoneNumber();
+		cellPhone.setNumber("0241406244");
+		cellPhone.setType("personal phone");
+		cellPhone.setCustomerr(customerr);
+
+		PhoneNumber homeNumber = new PhoneNumber();
+		homeNumber.setCustomerr(customerr);
+		homeNumber.setNumber("0245381917");
+		homeNumber.setType("home phone");
+
+		ph1.add(homeNumber);
+		ph1.add(cellPhone);
+
+		customerr.setName("Erastus Doh");
+		customerr.setNumbers(ph1);
+
+
+		customerrRepository.save(customerr);
+
+
+	}
 
 
 }
