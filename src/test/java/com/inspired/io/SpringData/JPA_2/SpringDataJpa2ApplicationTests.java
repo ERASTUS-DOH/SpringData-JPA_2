@@ -8,12 +8,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.transaction.annotation.Transactional;
 
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -254,27 +252,54 @@ class  SpringDataJpa2ApplicationTests {
 	@Test
 	public void testCreateCustomerr() {
 		Customerr customerr = new Customerr();
-		HashSet<PhoneNumber> ph1 = new HashSet<>();
+//		HashSet<PhoneNumber> ph1 = new HashSet<>();
 		PhoneNumber cellPhone = new PhoneNumber();
 		cellPhone.setNumber("0241406244");
 		cellPhone.setType("personal phone");
-		cellPhone.setCustomerr(customerr);
+//		cellPhone.setCustomerr(customerr);
 
 		PhoneNumber homeNumber = new PhoneNumber();
-		homeNumber.setCustomerr(customerr);
+//		homeNumber.setCustomerr(customerr);
 		homeNumber.setNumber("0245381917");
 		homeNumber.setType("home phone");
-
-		ph1.add(homeNumber);
-		ph1.add(cellPhone);
-
+		customerr.addPhoneNumber(homeNumber);
+		customerr.addPhoneNumber(cellPhone);
 		customerr.setName("Erastus Doh");
-		customerr.setNumbers(ph1);
-
-
 		customerrRepository.save(customerr);
+	}
 
+	@Test
+	public void testGetCustomerRecords(){
+		Optional<Customerr> customerr =	customerrRepository.findById(10);
+		if(customerr.isPresent()){
+			Customerr customerr1 = customerr.get();
+			System.out.println(customerr1.getName());
+			Set<PhoneNumber> numberSet = customerr1.getNumbers();
+			numberSet.forEach(number -> System.out.println(number.getNumber()));
+		}
+	}
 
+	@Test
+
+	public void testUpdateCustomer(){
+		Optional<Customerr> customerr = customerrRepository.findById(10);
+		if(customerr.isPresent()){
+			Customerr customerr1 = customerr.get();
+			customerr1.setName("Erastus Elinam Doh");
+			Set<PhoneNumber> phoneNumbers = customerr1.getNumbers();
+			phoneNumbers.forEach(phoneNumber-> phoneNumber.setType("Personal Line"));
+			customerrRepository.save(customerr1);
+
+		}
+	}
+
+	@Test
+	public void testDeleteCustomer(){
+		customerrRepository.deleteById(10);
+		Optional<Customerr> customerr = customerrRepository.findById(10);
+		if(customerr.isEmpty()){
+			System.out.println("Delete occurred successfully");
+		}
 	}
 
 
